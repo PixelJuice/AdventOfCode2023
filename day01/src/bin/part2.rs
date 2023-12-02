@@ -9,42 +9,33 @@ fn main() {
 fn solve(input: &str) -> String {
     let mut value = 0;
     for line in input.lines() {
-        let mut texts = find_text_matches(line.trim());
-        let mut numbers = find_number_matches(line.trim());
-        numbers.append(&mut texts);
-        numbers.sort_by(|a, b| a.0.cmp(&b.0));
-        let mut line_number = numbers[0].1.to_string();
-        line_number.push_str(&numbers[numbers.len() - 1].1.to_string().to_owned());
-        let add_value = line_number.parse::<u32>();
+        let numbers = find_number_matches(line.trim());
+        let first = numbers.first().unwrap();
+        let last = numbers.last().unwrap();     
+        let add_value = format!("{first}{last}").parse::<u32>();
         let as_number = match add_value {
             Ok(x) => x,
             Err(e) => panic!("error {}", e),
         };
         value += as_number;
-        //println!("{}", &as_number);
     }  
     value.to_string()
 }
 
-fn find_number_matches(input: &str) -> Vec<(usize, u8)> {
-    let mut matches: Vec<(usize, u8)> = vec![];
+fn find_number_matches(input: &str) -> Vec<u32> {
+    let number_in_text: [&str; 9] = ["one","two", "three", "four", "five", "six", "seven", "eight", "nine"];
+    let mut matches: Vec<u32> = vec![];
     for letter in 0..input.len()  {
         let c = input.chars().nth(letter).unwrap();
         if c.is_numeric() {
-            matches.push((letter, c.to_digit(10).unwrap() as u8));
+            matches.push(c.to_digit(10).unwrap());
         }
-    }
-    matches
-}
-
-fn find_text_matches(input: &str) -> Vec<(usize, u8)> {
-    let number_in_text: [&str; 9] = ["one","two", "three", "four", "five", "six", "seven", "eight", "nine"];
-    let mut matches: Vec<(usize, u8)> = vec![];
-    for number in 0..number_in_text.len() {
-        if input.contains(number_in_text[number]) {
-            let collection: Vec<_> = input.match_indices(number_in_text[number]).collect();
-            for found in collection  {
-                matches.push((found.0, (number + 1) as u8))
+        else {
+            let str_slice = input[letter..].to_owned();
+            for number in 0..number_in_text.len() {
+                if str_slice.starts_with(number_in_text[number]) {
+                    matches.push((number + 1) as u32);
+                }
             }
         }
     }

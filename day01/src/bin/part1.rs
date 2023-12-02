@@ -5,19 +5,21 @@ fn main() {
 }
 
 fn solve(input: &str) -> String {
-    let mut value = 0;
+    let mut value = 0; 
     for line in input.lines() {
-        let mut line_numbers: Vec<char> = vec![];
+        let mut line_numbers: Vec<u32> = vec![];
         for letter in line.chars()  {
-            if letter.is_numeric() {
-                line_numbers.push(letter);
+            match letter.to_digit(10) {
+                Some(num) => line_numbers.push(num),
+                None => (),
             }
         }
-        let first_number = line_numbers[0];
-        let second_number = line_numbers[line_numbers.len() -1];
-        let mut line_value = first_number.to_string();
-        line_value.push(second_number);
-        value += line_value.parse::<i32>().unwrap();
+        let first_number = line_numbers.first().expect("should be atleast one number");
+        let line_value = match line_numbers.last() {
+            Some(x) => format!("{first_number}{x}"),
+            None => format!("{first_number}{first_number}"),
+        };
+        value += line_value.parse::<u32>().unwrap();
     }
     value.to_string()
 }
