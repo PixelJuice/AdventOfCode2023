@@ -1,16 +1,16 @@
 fn main() {
-    let input = include_str!("./input1.txt");
+    let input = include_str!("./input2.txt");
     let output = solve(input);
     dbg!(output);
 }
 
 fn solve(input: &str) -> String {
     let colours = ["blue", "green", "red"];
-    let colour_max: [u32; 3] = [14, 13, 12];
     let mut return_value = 0;
     for line in input.lines() {
+        let mut max_amount_shown: [u32; 3] = [0,0,0];
         let game = line.split_once(':').unwrap();
-        let result = game.1.split(split_on_chars).all(|shown_item| {
+        game.1.split(split_on_chars).for_each(|shown_item| {
             for colour in 0..colours.len() {
                 match shown_item.find(colours[colour]) {
                     Some(_) => {
@@ -21,25 +21,18 @@ fn solve(input: &str) -> String {
                             }
                             amount.push(letter);
                         }
-                        if amount.parse::<u32>().unwrap() > colour_max[colour] {
-                            return false
+                        let new_amount = amount.parse::<u32>().unwrap();
+                        if new_amount >  max_amount_shown[colour]{
+                            max_amount_shown[colour] = new_amount;
                         }
                     },
                     None => (),
                 }
             }
-            true
+            
         });
-        if result {
-            let mut game_id = String::new();
-            for letter in game.0[5..].chars() {
-                if !letter.is_ascii_digit() {
-                    break;
-                }
-                game_id.push(letter);
-            }
-            return_value += game_id.parse::<u32>().expect("this should be a number");
-        }  
+        let result = max_amount_shown[0] * max_amount_shown[1] * max_amount_shown[2]; 
+        return_value += result;
     }
     return_value.to_string()
 }
@@ -58,8 +51,7 @@ mod tests {
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
 Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
-Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-Game 100: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green");
-        assert_eq!(result, "108");
+Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green");
+        assert_eq!(result, "2286");
     }
 }
