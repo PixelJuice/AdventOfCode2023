@@ -19,7 +19,7 @@ fn solve(input: &str) -> String {
             Some(x) => format!("{first_number}{x}"),
             None => format!("{first_number}{first_number}"),
         };
-        value += line_value.parse::<u32>().unwrap();
+        value += line_value.parse::<u32>().expect("this should be a valid u32");
     }
     value.to_string()
 }

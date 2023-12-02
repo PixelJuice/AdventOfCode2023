@@ -31,7 +31,7 @@ fn find_number_matches(input: &str) -> Vec<u32> {
             matches.push(c.to_digit(10).unwrap());
         }
         else {
-            let str_slice = input[letter..].to_owned();
+            let str_slice = &input[letter..];
             for number in 0..number_in_text.len() {
                 if str_slice.starts_with(number_in_text[number]) {
                     matches.push((number + 1) as u32);
