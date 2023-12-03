@@ -41,9 +41,6 @@ fn solve(input: &str) -> String {
                     match line.chars().nth(temp_x) {
                         Some(c) => {
                             if c.is_ascii_digit() {
-                                if symbol == '6' {
-                                    println!("hello 6 {temp_x}")
-                                }
                                 if temp_x == 0 {
                                     add_one = false;
                                     break
@@ -60,13 +57,10 @@ fn solve(input: &str) -> String {
                 if add_one {
                     temp_x += 1;
                 }
-                
-                println!("start at {temp_x}");
                 while line.chars().nth(temp_x).unwrap_or('.').is_ascii_alphanumeric() {
                     value.push(line.chars().nth(temp_x).unwrap());
                     temp_x += 1;
                 }
-                println!("{value} {x}:{y}");
                 if !value.is_empty() {
                     grid[y].push(Content::Number(value.parse::<u32>().expect("Expect a number")));  
                 }  
@@ -74,8 +68,11 @@ fn solve(input: &str) -> String {
             else if symbol == '.' {
                 grid[y].push(Content::Blank);
             }
-            else {
+            else if symbol == '*'{
                 grid[y].push(Content::Symbol(symbol));
+            }
+            else {
+                grid[y].push(Content::Blank);
             }
             
             x += 1;
@@ -93,7 +90,6 @@ fn solve(input: &str) -> String {
             match symbol {
                 Content::Number(_) => (),
                 Content::Symbol(c) => {
-                    println!("char is {c}");
                     for pos in positions {
                         let mut test_pos_x = 0;
                         let mut test_pos_y = 0;
@@ -108,7 +104,6 @@ fn solve(input: &str) -> String {
 
                         match grid[test_pos_y][test_pos_x] {
                             Content::Number(num) => {
-                                println!("number added {num}");
                                 values.push(num)
                             },
                             Content::Symbol(_) => (),
@@ -120,9 +115,13 @@ fn solve(input: &str) -> String {
             }
             values.sort_unstable();
             values.dedup();
-            for num in values {
-                final_value += num;
-            }
+            if values.len() > 1 {
+                let mut value_to_add = *values.first().unwrap();
+                for idx in 1..values.len() {
+                    value_to_add *= values[idx];
+                }
+                final_value += value_to_add;
+            }   
             x += 1;
         }
         y += 1
@@ -147,6 +146,6 @@ mod tests {
 ......755.
 ...$.*....
 .664.598..");
-        assert_eq!(result, "4361");
+        assert_eq!(result, "467835");
     }
 }
