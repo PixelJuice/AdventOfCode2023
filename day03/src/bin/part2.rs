@@ -89,7 +89,7 @@ fn solve(input: &str) -> String {
             let mut values:Vec<u32> = vec![];
             match symbol {
                 Content::Number(_) => (),
-                Content::Symbol(c) => {
+                Content::Symbol(_) => {
                     for pos in positions {
                         let mut test_pos_x = 0;
                         let mut test_pos_y = 0;
