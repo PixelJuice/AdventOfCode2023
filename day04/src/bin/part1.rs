@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 
 fn main() {
     let input = include_str!("./input1.txt");
@@ -10,21 +12,13 @@ fn solve(input: &str) -> String {
     for line in input.lines() {
         let first_split = line.split_once(':').unwrap();
         let second_split = first_split.1.split_once('|').unwrap();
-        let winning_numbers:Vec<u32> = second_split.0.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
-        let ticket_numbers:Vec<u32> = second_split.1.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
-        let mut win_value = 0;
-        for win in ticket_numbers {
-            for num in &winning_numbers {
-                if win == *num  {
-                    if win_value == 0 {
-                        win_value += 1;
-                    }
-                    else {
-                        win_value *= 2;
-                    }
-                }
-            }
-        }
+        let winning_numbers:HashSet<u32> = second_split.0.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
+        let ticket_numbers:HashSet<u32> = second_split.1.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
+        let mut win_value:u32 = 0;
+        let wins:u32 = ticket_numbers.intersection(&winning_numbers).count() as u32;
+        if wins > 0 {
+            win_value = (2 as u32).pow(wins - 1);
+        }    
         value += win_value;
     }
     
