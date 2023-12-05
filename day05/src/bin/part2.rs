@@ -22,7 +22,7 @@ fn solve(input: &str) -> String {
 
 fn process_seed(seed: u128, chart:&Vec<HashMap<Range<u128>,u128>>) -> u128{
     let mut num = seed;
-    let h = chart.len();
+    // let h = chart.len();
     // println!("there are {h} charts");
     // let mut last_num = seed;
     for map in chart {
