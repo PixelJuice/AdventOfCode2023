@@ -24,8 +24,8 @@ fn solve(input: &str) -> String {
         let first_split = line.split_once(':').unwrap();
         let card = first_split.0.split_ascii_whitespace().last().expect("card id").parse::<u32>().expect("number");
         let second_split = first_split.1.split_once('|').unwrap();
-        let winning_numbers:HashSet<u32> = second_split.0.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
-        let ticket_numbers:HashSet<u32> = second_split.1.trim().split_ascii_whitespace().map(|num| num.parse::<u32>().expect("only numbers")).collect();
+        let winning_numbers:HashSet<u32> = second_split.0.trim().split_ascii_whitespace().filter_map(|num| num.parse::<u32>().ok()).collect();
+        let ticket_numbers:HashSet<u32> = second_split.1.trim().split_ascii_whitespace().filter_map(|num| num.parse::<u32>().ok()).collect();
         cards.push(ScratchCard { card_nr: card, winning_numbers: winning_numbers, ticket_numbers: ticket_numbers })
     }
     let num_cards = check_wins(&cards, &cards, cards.len() as u32);
