@@ -15,7 +15,15 @@ mod tests {
 
     #[test]
     fn solve_puzzle() {
-        let result = solve("");
-        assert_eq!(result, "");
+        let result = solve("Time:      7  15   30
+Distance:  9  40  200");
+        assert_eq!(result, "288");
+    }
+
+    #[test]
+    fn solve_actual_puzzle() {
+        let result = solve("Time:        40     81     77     72
+        Distance:   219   1012   1365   1089");
+        assert_eq!(result, result);
     }
 }
