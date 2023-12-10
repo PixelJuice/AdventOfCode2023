@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use num::integer::gcd;
 
 fn main() {
     let input = include_str!("./input1.txt");
@@ -19,25 +20,40 @@ fn solve(input: &str) -> String {
     let data = build_map(instructions_split.1.trim());
     let map = data.0;
     let mut current_pos = data.1;
+    let mut cycles: Vec<usize> = vec![];
     let mut test_all = false;
     let mut instruct = instructions.iter().cycle();
     while !test_all {
+        test_all = current_pos.iter().all(|pos| pos.ends_with('Z')); // this could probably just be a check for len()
         let next = instruct.next().unwrap();
-        //dbg!(next);
-        /*for pos in 0..current_pos.len() {
-            current_pos[pos] = map.get_key_value(current_pos[pos]).expect("a direction").1[*next];
-        }*/
-        current_pos = current_pos.iter().map(|pos| map.get_key_value(pos).expect("pos").1[*next] ).collect::<Vec<&str>>();
-        //dbg!(&current_pos);
-        test_all = current_pos.iter().all(|pos| pos.ends_with('Z'));
-        //dbg!(&current_pos);
-        //current_pos = map.get_key_value(current_pos).expect("a direction").1[instruction];
+        // dbg!(&current_pos);
+        current_pos = current_pos.iter().filter_map(|pos| 
+            if pos.ends_with('Z') {
+                cycles.push(current_step);
+                println!("{pos}");
+                None
+            }
+            else {
+                Some(map.get_key_value(pos).expect("pos").1[*next])
+            } 
+        ).collect::<Vec<&str>>();
+        // println!("after");
+        // dbg!(&current_pos);
         current_step += 1;
-        //println!("curent pos {current_pos}");
-    // }
     }
-    //dbg!(current_pos);
-    current_step.to_string()
+    let least_common = find_lcm(&cycles);
+    // dbg!(stops_at);
+    least_common.to_string()
+}
+
+
+fn find_lcm(cycles: &[usize]) -> usize {
+    if cycles.len() == 1 {
+        return cycles[0];
+    }
+    let a = cycles[0];
+    let b = find_lcm(&cycles[1..]);
+    a * b / gcd(a, b)
 }
 
 fn build_map(instructions_split: &str) -> (HashMap<&str, [&str; 2]>, Vec<&str>) {
@@ -62,8 +78,8 @@ mod tests {
 
     #[test]
     fn solve_puzzle() {
-        let result = solve(include_str!("./input1.txt"));
-        assert_eq!(result, "6");
+        let result =  solve(include_str!("./input1.txt"));
+        assert_eq!(result, "21003205388413");
     }
 
    #[test]
