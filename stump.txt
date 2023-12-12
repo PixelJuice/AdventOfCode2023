@@ -1,10 +1,15 @@
 fn main() {
-    let input = include_str!("./input1.txt");
+    let input = include_str!("./input.txt");
     let output = solve(input);
     dbg!(output);
 }
 
+fn pre_process(input: &str) {
+
+}
+
 fn solve(input: &str) -> String {
+    pre_process(input);
     input.to_string()
 }
 
