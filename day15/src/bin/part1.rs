@@ -1,7 +1,3 @@
-use std::result;
-
-use itertools::Itertools;
-
 fn main() {
     let input = include_str!("./input.txt");
     let output = solve(input);
