@@ -20,7 +20,7 @@ impl Puzzle {
         }
     }
 
-    fn print(&mut self , input: &str) {
+    /*fn print(&mut self , input: &str) {
         let col_count = input.lines().next().expect("line").trim().len();
         self.lines = repeat_n(String::new(), col_count).collect::<Vec<String>>();
         for line in input.lines().rev() {
@@ -32,7 +32,7 @@ impl Puzzle {
         }
         dbg!(&self.lines);
         dbg!(&self.collums);
-    }
+    }*/
 
     fn drop(&mut self) {
         for i in 0..self.collums.len() {
